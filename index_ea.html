@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raymond — Executive Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Italiana&family=Tenor+Sans&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .inbox-email{display:flex;align-items:center;gap:14px;padding:18px 30px;border-bottom:1px solid var(--border);transition:all .5s ease;cursor:default;position:relative;overflow:hidden;}
+        .inbox-email:hover{background:rgba(197,160,89,.04);}
+        .inbox-email.answered{opacity:.45;background:rgba(0,0,0,.05);}
+        .inbox-email.answered .inbox-email-dot{background:transparent !important;}
+        .inbox-email.answered .inbox-email-status span{color:#59C57A;}
+        .inbox-email.sliding-out{transform:translateX(100%);opacity:0;}
+        .inbox-email-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;transition:background .3s;}
+        .inbox-email-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+        .inbox-email-body{flex:1;min-width:0;}
+        .inbox-email-from{font-size:14px;font-weight:600;margin-bottom:3px;display:flex;align-items:center;gap:8px;}
+        .inbox-email-tag{font-size:10px;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;}
+        .inbox-email-tag.urgent{background:rgba(231,76,60,.15);color:#e74c3c;}
+        .inbox-email-tag.external{background:rgba(74,144,217,.15);color:#4A90D9;}
+        .inbox-email-tag.priority{background:rgba(197,160,89,.15);color:#C5A059;}
+        .inbox-email-tag.internal{background:rgba(217,74,122,.15);color:#D94A7A;}
+        .inbox-email-subject{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .inbox-email-preview{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+        .inbox-email-time{font-size:12px;color:var(--muted);flex-shrink:0;min-width:70px;text-align:right;}
+        .inbox-email-status span{font-size:18px;color:var(--accent);transition:color .3s;}
+        .app-tab{transition:all .3s ease;}
+        .app-tab.active{color:var(--text) !important;border-bottom-color:var(--accent) !important;}
+        .app-tab:hover{color:var(--text) !important;}
+        .app-panel{transition:opacity .4s ease;}
+        #excel-grid td,#excel-grid th{padding:10px 16px;border:1px solid var(--border);text-align:left;}
+        #excel-grid td{color:var(--muted);transition:all .3s;}
+        #excel-grid td.active-cell{background:rgba(33,115,70,.1);border-color:#217346;color:var(--text);}
+        @media(max-width:640px){.inbox-email-preview,.inbox-email-time{display:none;}.inbox-email{padding:14px 16px;gap:10px;}#hubspot-pipeline{grid-template-columns:repeat(2,1fr) !important;}}
+        .hs-col{background:#111;}
+        .hs-col-count{display:inline-block;margin-left:6px;background:rgba(255,255,255,0.06);padding:1px 6px;border-radius:8px;font-size:10px;}
+    </style>
+</head>
+
+<body>
+    <div id="scroll-bar"></div>
+
+    <!-- NAV -->
+    <nav class="nav" id="main-nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">Raymond</a>
+            <div class="nav-links">
+                <a href="#about" class="nl">About</a>
+                <a href="#expertise" class="nl">Expertise</a>
+                <a href="#experience" class="nl">Experience</a>
+                <a href="#testimonials" class="nl">Praise</a>
+                <a href="#contact" class="btn-outline">Enquire</a>
+            </div>
+            <button class="nav-toggle" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-bg"><img src="assets/images/hero-yacht.png" alt="Luxury yacht golden hour" /></div>
+        <div class="hero-content sr">
+            <span class="section-label" style="color:var(--text)">Executive Assistant · Metro Manila</span>
+            <h1 class="hero-title">The Art of <span class="heading-serif">Flawless</span> Support</h1>
+            <p style="font-size:20px;letter-spacing:.05em;margin-bottom:40px;color:var(--text-dim)">Discreet.
+                Meticulous. Three steps ahead.</p>
+            <a href="#contact" class="btn-solid">Discovery Call</a>
+        </div>
+    </section>
+
+    <!-- INTRO / ABOUT ME -->
+    <section id="about" class="section-padding bg-darker" style="position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:0; background: url('assets/images/luxury-villa.png') center/cover no-repeat; opacity:0.02; z-index:0; filter: grayscale(100%);"></div>
+        <div class="container sr" style="position:relative; z-index:1; display: flex; flex-wrap: wrap; align-items: center; gap: 60px; justify-content: center;">
+            <div style="flex: 1 1 350px; max-width: 400px; position: relative; padding: 10px; border: 1px solid var(--border);">
+                <img src="assets/RCP-Headshot-Suit.png" alt="Raymond Professional Headshot" style="width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center; border-radius: 4px; filter: grayscale(10%) contrast(1.05);" />
+            </div>
+            <div style="flex: 1 1 500px; max-width: 600px;">
+                <span class="section-label">About Raymond</span>
+                <h2 style="font-family:var(--serif);font-size:clamp(2.5rem,4vw,3.5rem);line-height:1.2;margin-bottom:30px">
+                    Operating at the intersection of <span class="heading-serif">discretion</span> and initiative.</h2>
+                <p style="font-size:17px;color:var(--muted);line-height:1.8;margin-bottom:20px">Raymond is not just an assistant; he is
+                    a strategic partner. Protecting time, anticipating needs, and ensuring every interaction reflects the
+                    standards of the leaders he supports.</p>
+                <p style="font-size:17px;color:var(--muted);line-height:1.8">With a sharp eye for detail and an unwavering commitment to excellence, he specializes in providing flawless, high-end support to discerning professionals, allowing them to focus on their core objectives without distraction.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PHILOSOPHY SECTION -->
+    <section id="philosophy" class="section-padding bg-charcoal" style="position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:0; background: url('assets/images/executive-workspace.png') center/cover no-repeat; opacity:0.02; z-index:0; filter: grayscale(100%);"></div>
+        <div class="container sr phil-container">
+            <div class="phil-img-wrap">
+                <div class="phil-img-inner">
+                    <img src="assets/images/executive-workspace.png" alt="Executive desk" 
+                         style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9) contrast(1.05);" />
+                </div>
+            </div>
+            <div style="flex: 1 1 450px; max-width: 550px;">
+                <span class="section-label">Our Philosophy</span>
+                <h2 style="font-family:var(--serif); font-size: clamp(2.8rem, 5vw, 3.8rem); line-height: 1.1; margin-bottom: 40px;">
+                    The Right Hand, Not an <span class="heading-serif">Admin Robot</span>
+                </h2>
+                <p style="color:var(--text); font-size: 19px; line-height: 1.8; margin-bottom: 25px; font-family: var(--serif); font-style: italic;">
+                    "Excellence is not an act, but a habit of anticipating the unspoken."
+                </p>
+                <p style="color:var(--muted); font-size: 17px; line-height: 1.9; margin-bottom: 30px;">
+                    Operating at the highest levels requires more than just task completion—it requires <b>anticipatory intelligence</b>. I catch the typo, the scheduling conflict, and the missing detail before they ever reach your desk.
+                </p>
+                <p style="color:var(--muted); font-size: 17px; line-height: 1.9; margin-bottom: 50px;">
+                    My approach is proactive, resourceful, and relentless in follow-through. I don't just manage your day; I protect your focus, ensuring you can lead without operational friction.
+                </p>
+                <a href="#expertise" class="btn-solid" style="padding: 20px 50px;">Explore My Expertise</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES GRID -->
+    <section id="expertise" class="section-padding bg-darker" style="position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:0; background: url('assets/images/fine-dining.png') center/cover no-repeat; opacity:0.15; z-index:0; filter: grayscale(100%);"></div>
+        <div class="container" style="position:relative; z-index:1;">
+            <div style="text-align:center;margin-bottom:80px">
+                <span class="section-label">Services</span>
+                <h2 style="font-family:var(--serif);font-size:48px">Tailored <span
+                        class="heading-serif">Excellence</span></h2>
+            </div>
+            <div class="service-grid sr">
+                <div class="service-card">
+                    <img src="assets/images/private-jet.png" alt="Travel" />
+                    <div class="service-card-content">
+                        <h3 class="service-card-title">Global Logistics</h3>
+                        <p style="font-size:14px;color:var(--text-dim)">End-to-end coordination: flights, five-star
+                            hotels, ground transport, and contingency plans.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img src="assets/images/fine-dining.png" alt="Lifestyle" />
+                    <div class="service-card-content">
+                        <h3 class="service-card-title">Lifestyle Concierge</h3>
+                        <p style="font-size:14px;color:var(--text-dim)">Managing high-stakes diaries, private events,
+                            and exclusive access with complete discretion.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img src="assets/images/luxury-villa.png" alt="Property" />
+                    <div class="service-card-content">
+                        <h3 class="service-card-title">Strategic Support</h3>
+                        <p style="font-size:14px;color:var(--text-dim)">Protecting the principal's interests and
+                            operating as a trusted advisor in sensitive matters.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OPERATIONAL PULSE -->
+    <section id="operational-pulse" class="section-padding bg-darker" style="position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:0; background: url('assets/images/private-jet.png') center/cover no-repeat; opacity:0.15; z-index:0; filter: grayscale(100%) brightness(0.6);"></div>
+        <div class="container" style="position:relative; z-index:1;">
+            <div class="sr" style="text-align:center; max-width:700px; margin:0 auto 100px;">
+                <span class="section-label">Operational Excellence</span>
+                <h2 style="font-family:var(--serif); font-size:clamp(2.5rem,5vw,3.8rem); line-height:1.15; margin-bottom:25px;">
+                    The Silent <span class="heading-serif">Orchestration</span>
+                </h2>
+                <p style="color:var(--muted); font-size:17px; line-height:1.8;">A day in the life — anticipating needs, aligning stakeholders, and ensuring every moving part operates with precision and grace.</p>
+            </div>
+
+            <!-- Daily Cadence — Checklist -->
+            <div class="elegant-checklist-container sr">
+                <div class="elegant-checklist">
+                    <div class="checklist-item" data-delay="1">
+                        <div class="checklist-time">08:30</div>
+                        <div class="checklist-box"></div>
+                        <div class="checklist-label">Coordinate Monthly Governance Review</div>
+                    </div>
+                    <div class="checklist-item" data-delay="3">
+                        <div class="checklist-time">10:00</div>
+                        <div class="checklist-box"></div>
+                        <div class="checklist-label">Synthesize EOS Dashboard Metrics</div>
+                    </div>
+                    <div class="checklist-item" data-delay="5">
+                        <div class="checklist-time">13:00</div>
+                        <div class="checklist-box"></div>
+                        <div class="checklist-label">Prepare Strategy &amp; Planning Packs</div>
+                    </div>
+                    <div class="checklist-item" data-delay="7">
+                        <div class="checklist-time">15:30</div>
+                        <div class="checklist-box"></div>
+                        <div class="checklist-label">Track Leadership Actions in HubSpot</div>
+                    </div>
+                    <div class="checklist-item" data-delay="9">
+                        <div class="checklist-time">17:00</div>
+                        <div class="checklist-box"></div>
+                        <div class="checklist-label">Align Operations &amp; HR Policies</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Communications — Large Inbox Visualization -->
+            <div class="sr" style="margin-top:100px; text-align:center;">
+                <span class="section-label">Communications</span>
+                <h3 style="font-family:var(--serif); font-size:clamp(2rem,4vw,2.8rem); margin-bottom:20px;">Executive <span class="heading-serif">Inbox</span></h3>
+                <p style="color:var(--muted); max-width:600px; margin:0 auto 40px; font-size:17px;">Triaging, drafting, and resolving high-priority correspondence — achieving Inbox Zero daily.</p>
+                <div id="inbox-demo" style="width:100%; min-height:500px; background:rgba(0,0,0,0.15); border:1px solid var(--border); border-radius:12px; overflow:hidden; text-align:left;">
+                    <!-- Inbox Header -->
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:20px 30px; border-bottom:1px solid var(--border);">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span class="material-symbols-outlined" style="color:var(--accent); font-size:22px;">inbox</span>
+                            <span style="font-size:15px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;">Inbox</span>
+                            <span id="inbox-count" style="background:var(--accent); color:#000; font-size:11px; font-weight:700; padding:2px 8px; border-radius:10px;">5</span>
+                        </div>
+                        <div style="display:flex; gap:20px; font-size:13px; color:var(--muted);">
+                            <span>Priority</span><span>All Mail</span><span>Sent</span>
+                        </div>
+                    </div>
+                    <!-- Email List -->
+                    <div id="inbox-list" style="padding:0;">
+                        <div class="inbox-email" data-status="unread">
+                            <div class="inbox-email-dot"></div>
+                            <div class="inbox-email-avatar" style="background:#C5A059;">JH</div>
+                            <div class="inbox-email-body">
+                                <div class="inbox-email-from">James Harrington <span class="inbox-email-tag urgent">Urgent</span></div>
+                                <div class="inbox-email-subject">Q3 Board Pack — Final Review Required</div>
+                                <div class="inbox-email-preview">Please ensure all financials are aligned before the 3pm deadline. Attach the updated...</div>
+                            </div>
+                            <div class="inbox-email-time">10:42 AM</div>
+                            <div class="inbox-email-status"><span class="material-symbols-outlined">mark_email_unread</span></div>
+                        </div>
+                        <div class="inbox-email" data-status="unread">
+                            <div class="inbox-email-dot"></div>
+                            <div class="inbox-email-avatar" style="background:#4A90D9;">SM</div>
+                            <div class="inbox-email-body">
+                                <div class="inbox-email-from">Sarah Mitchell <span class="inbox-email-tag external">External</span></div>
+                                <div class="inbox-email-subject">Private Flight — Manila to Singapore Confirmation</div>
+                                <div class="inbox-email-preview">Confirming the charter for Thursday. Departure at 0800 local. Ground transfer arranged...</div>
+                            </div>
+                            <div class="inbox-email-time">09:15 AM</div>
+                            <div class="inbox-email-status"><span class="material-symbols-outlined">mark_email_unread</span></div>
+                        </div>
+                        <div class="inbox-email" data-status="unread">
+                            <div class="inbox-email-dot"></div>
+                            <div class="inbox-email-avatar" style="background:#59C57A;">LK</div>
+                            <div class="inbox-email-body">
+                                <div class="inbox-email-from">Legal — Karen Wu <span class="inbox-email-tag priority">Priority</span></div>
+                                <div class="inbox-email-subject">NDA Amendment — Signature Required Today</div>
+                                <div class="inbox-email-preview">Attached is the revised NDA. The counterparty has agreed to the new terms. Kindly...</div>
+                            </div>
+                            <div class="inbox-email-time">08:50 AM</div>
+                            <div class="inbox-email-status"><span class="material-symbols-outlined">mark_email_unread</span></div>
+                        </div>
+                        <div class="inbox-email" data-status="unread">
+                            <div class="inbox-email-dot"></div>
+                            <div class="inbox-email-avatar" style="background:#D94A7A;">MC</div>
+                            <div class="inbox-email-body">
+                                <div class="inbox-email-from">Maria Chen <span class="inbox-email-tag internal">Internal</span></div>
+                                <div class="inbox-email-subject">Team Offsite — Venue Shortlist &amp; Budget</div>
+                                <div class="inbox-email-preview">Hi Raymond, here are the three venue options for the leadership offsite next month...</div>
+                            </div>
+                            <div class="inbox-email-time">08:30 AM</div>
+                            <div class="inbox-email-status"><span class="material-symbols-outlined">mark_email_unread</span></div>
+                        </div>
+                        <div class="inbox-email" data-status="unread">
+                            <div class="inbox-email-dot"></div>
+                            <div class="inbox-email-avatar" style="background:#9B59B6;">AW</div>
+                            <div class="inbox-email-body">
+                                <div class="inbox-email-from">Andrew Wells <span class="inbox-email-tag external">External</span></div>
+                                <div class="inbox-email-subject">Investor Dinner — RSVP &amp; Dietary Requirements</div>
+                                <div class="inbox-email-preview">Could you please confirm attendance and pass along any dietary restrictions for the...</div>
+                            </div>
+                            <div class="inbox-email-time">Yesterday</div>
+                            <div class="inbox-email-status"><span class="material-symbols-outlined">mark_email_unread</span></div>
+                        </div>
+                    </div>
+                    <!-- Inbox Zero Banner (hidden initially) -->
+                    <div id="inbox-zero-banner" style="display:none; text-align:center; padding:80px 30px;">
+                        <span class="material-symbols-outlined" style="font-size:48px; color:var(--accent); margin-bottom:16px; display:block;">verified</span>
+                        <h4 style="font-family:var(--serif); font-size:24px; margin-bottom:8px;">Inbox Zero Achieved</h4>
+                        <p style="color:var(--muted); font-size:14px;">All 5 emails triaged, drafted, and resolved.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applications Managed — Large Visualization -->
+            <div class="sr" style="margin-top:100px; text-align:center;">
+                <span class="section-label">Productivity Suite</span>
+                <h3 style="font-family:var(--serif); font-size:clamp(2rem,4vw,2.8rem); margin-bottom:20px;">Applications <span class="heading-serif">Managed</span></h3>
+                <p style="color:var(--muted); max-width:600px; margin:0 auto 40px; font-size:17px;">Fluent across the executive tech stack — creating decks, crunching data, and delivering polished outputs.</p>
+                <div id="apps-demo" style="width:100%; min-height:500px; background:rgba(0,0,0,0.15); border:1px solid var(--border); border-radius:12px; overflow:hidden;">
+                    <!-- App Tabs -->
+                    <div style="display:flex; border-bottom:1px solid var(--border);">
+                        <button class="app-tab active" data-app="slides" style="flex:1; padding:18px; background:none; border:none; color:var(--text); font-size:13px; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; border-bottom:2px solid var(--accent); display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <span class="material-symbols-outlined" style="font-size:18px; color:#F4B400;">slideshow</span> Slides
+                        </button>
+                        <button class="app-tab" data-app="excel" style="flex:1; padding:18px; background:none; border:none; color:var(--muted); font-size:13px; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; border-bottom:2px solid transparent; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <span class="material-symbols-outlined" style="font-size:18px; color:#217346;">table_chart</span> Excel
+                        </button>
+                        <button class="app-tab" data-app="hubspot" style="flex:1; padding:18px; background:none; border:none; color:var(--muted); font-size:13px; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; border-bottom:2px solid transparent; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <span class="material-symbols-outlined" style="font-size:18px; color:#FF7A59;">hub</span> HubSpot
+                        </button>
+                    </div>
+                    <!-- Slides Panel -->
+                    <div id="app-slides" class="app-panel active" style="padding:30px; position:relative;">
+                        <div style="background:#1a1a1a; border-radius:8px; border:1px solid var(--border); aspect-ratio:16/9; max-height:380px; margin:0 auto; position:relative; overflow:hidden;">
+                            <!-- Slide Content -->
+                            <div id="slide-canvas" style="width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:40px; position:relative;">
+                                <div id="slide-title" style="font-family:var(--serif); font-size:clamp(1.2rem,3vw,2rem); text-align:center; opacity:0; transform:translateY(20px); transition:all 0.6s ease;">Q3 Strategic Review</div>
+                                <div id="slide-subtitle" style="color:var(--accent); font-size:clamp(0.7rem,1.5vw,0.9rem); letter-spacing:.15em; text-transform:uppercase; margin-top:12px; opacity:0; transform:translateY(20px); transition:all 0.6s ease 0.3s;">Apex Capital Partners · Confidential</div>
+                                <div id="slide-divider" style="width:0; height:1px; background:var(--accent); margin-top:20px; transition:width 0.8s ease 0.6s;"></div>
+                                <div id="slide-bullets" style="margin-top:24px; text-align:left; width:70%; opacity:0; transform:translateY(15px); transition:all 0.6s ease 0.9s;">
+                                    <div style="display:flex; gap:10px; margin-bottom:10px; font-size:clamp(0.65rem,1.2vw,0.85rem); color:var(--muted);"><span style="color:var(--accent);">▸</span> Revenue growth: +18% YoY</div>
+                                    <div style="display:flex; gap:10px; margin-bottom:10px; font-size:clamp(0.65rem,1.2vw,0.85rem); color:var(--muted);"><span style="color:var(--accent);">▸</span> Market expansion into 3 new regions</div>
+                                    <div style="display:flex; gap:10px; font-size:clamp(0.65rem,1.2vw,0.85rem); color:var(--muted);"><span style="color:var(--accent);">▸</span> Operational efficiency targets exceeded</div>
+                                </div>
+                            </div>
+                            <!-- Slide Counter -->
+                            <div style="position:absolute; bottom:12px; right:16px; font-size:11px; color:var(--muted);">Slide <span id="slide-num">1</span> / 3</div>
+                            <!-- Cursor Animation -->
+                            <div id="slide-cursor" style="position:absolute; width:14px; height:14px; border:2px solid var(--accent); border-radius:50%; pointer-events:none; opacity:0; transition:all 0.4s ease; box-shadow:0 0 8px rgba(197,160,89,0.4);"></div>
+                        </div>
+                    </div>
+                    <!-- Excel Panel -->
+                    <div id="app-excel" class="app-panel" style="padding:30px; display:none; position:relative;">
+                        <div style="background:#1a1a1a; border-radius:8px; border:1px solid var(--border); max-height:400px; overflow:hidden;">
+                            <!-- Excel Toolbar -->
+                            <div style="display:flex; align-items:center; gap:12px; padding:10px 16px; border-bottom:1px solid var(--border); font-size:11px; color:var(--muted);">
+                                <span style="color:#217346; font-weight:700;">fx</span>
+                                <div id="excel-formula-bar" style="flex:1; background:rgba(255,255,255,0.03); padding:6px 10px; border-radius:4px; font-family:monospace; font-size:12px; color:var(--accent); min-height:18px;"></div>
+                            </div>
+                            <!-- Spreadsheet Grid -->
+                            <div style="overflow-x:auto;">
+                                <table id="excel-grid" style="width:100%; border-collapse:collapse; font-size:13px;">
+                                    <thead>
+                                        <tr style="background:rgba(255,255,255,0.03);">
+                                            <th style="padding:10px 16px; border:1px solid var(--border); color:var(--muted); width:40px;"></th>
+                                            <th style="padding:10px 16px; border:1px solid var(--border); color:var(--muted); text-align:left;">A</th>
+                                            <th style="padding:10px 16px; border:1px solid var(--border); color:var(--muted); text-align:left;">B</th>
+                                            <th style="padding:10px 16px; border:1px solid var(--border); color:var(--muted); text-align:left;">C</th>
+                                            <th style="padding:10px 16px; border:1px solid var(--border); color:var(--muted); text-align:left;">D</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="excel-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- HubSpot Panel -->
+                    <div id="app-hubspot" class="app-panel" style="padding:30px; display:none; position:relative;">
+                        <div style="background:#1a1a1a; border-radius:8px; border:1px solid var(--border); overflow:hidden;">
+                            <!-- HubSpot Header -->
+                            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid var(--border);">
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <span class="material-symbols-outlined" style="color:#FF7A59; font-size:20px;">hub</span>
+                                    <span style="font-size:14px; font-weight:600; letter-spacing:.06em;">Deal Pipeline</span>
+                                </div>
+                                <div style="font-size:12px; color:var(--muted);">Q3 2026 · Active Deals</div>
+                            </div>
+                            <!-- Pipeline Columns -->
+                            <div id="hubspot-pipeline" style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); min-height:320px;">
+                                <div class="hs-col" data-stage="lead">
+                                    <div style="padding:14px 16px; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); border-bottom:2px solid #FF7A59;">Lead In <span class="hs-col-count">0</span></div>
+                                    <div class="hs-cards" style="padding:10px;"></div>
+                                </div>
+                                <div class="hs-col" data-stage="qualified">
+                                    <div style="padding:14px 16px; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); border-bottom:2px solid #F5C26B;">Qualified <span class="hs-col-count">0</span></div>
+                                    <div class="hs-cards" style="padding:10px;"></div>
+                                </div>
+                                <div class="hs-col" data-stage="proposal">
+                                    <div style="padding:14px 16px; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); border-bottom:2px solid #4A90D9;">Proposal <span class="hs-col-count">0</span></div>
+                                    <div class="hs-cards" style="padding:10px;"></div>
+                                </div>
+                                <div class="hs-col" data-stage="closed">
+                                    <div style="padding:14px 16px; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); border-bottom:2px solid #59C57A;">Closed Won <span class="hs-col-count">0</span></div>
+                                    <div class="hs-cards" style="padding:10px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stakeholder Network - Large Visualization -->
+            <div class="sr" style="margin-top: 100px; text-align: center;">
+                <span class="section-label">Global Coordination</span>
+                <h3 style="font-family: var(--serif); font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 20px;">Stakeholder <span class="heading-serif">Network</span></h3>
+                <p style="color: var(--muted); max-width: 600px; margin: 0 auto 40px; font-size: 17px;">An interactive map of multi-channel coordination, executive alignment, and personal principal support.</p>
+                <div id="delegation-graph" style="width:100%; height:75vh; min-height:600px; overflow:hidden; background: rgba(0,0,0,0.1); border: 1px solid var(--border); border-radius: 12px; position: relative;">
+                    <div style="position: absolute; bottom: 20px; right: 20px; font-size: 12px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;">
+                        Interactivity: Drag nodes to rearrange · Hover to reveal connections
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="section-padding bg-charcoal" style="position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:0; background: url('assets/images/london-skyline.png') center/cover no-repeat; opacity:0.15; z-index:0; filter: grayscale(100%) brightness(0.6);"></div>
+        <div class="container" style="position:relative; z-index:1;">
+            <div class="sr" style="text-align:center; max-width:700px; margin:0 auto 100px;">
+                <span class="section-label">Track Record</span>
+                <h2 style="font-family:var(--serif); font-size:clamp(2.5rem,5vw,3.8rem); line-height:1.15; margin-bottom:25px;">
+                    The <span class="heading-serif">Professional</span> Journey
+                </h2>
+                <p style="color:var(--muted); font-size:17px; line-height:1.8;">A curated progression through high-impact environments, each building upon the last.</p>
+            </div>
+            <div class="exp-timeline sr">
+                <!-- Role 1 -->
+                <div class="exp-entry">
+                    <div class="exp-meta">
+                        <span class="exp-date">2021 — Present</span>
+                        <div class="exp-line-h"></div>
+                    </div>
+                    <div class="exp-card">
+                        <h3 class="exp-company">Apex Capital Partners</h3>
+                        <p class="exp-scope">Virtual Leadership Administration &amp; Global Stakeholder Engagement</p>
+                        <div class="exp-divider"></div>
+                        <ul class="exp-duties">
+                            <li>Remotely managed executive calendars with strategic prioritization of global time zones and virtual logistics.</li>
+                            <li>Virtual orchestration of monthly governance meetings — preparing digital templates, pre-reads, and tracking remote actions.</li>
+                            <li>Directed all digital internal and external communications on behalf of international directors.</li>
+                            <li>Coordinated seamless quarterly virtual client reviews and cloud-based Strategy &amp; Planning packs.</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Role 2 -->
+                <div class="exp-entry">
+                    <div class="exp-meta">
+                        <span class="exp-date">2018 — 2021</span>
+                        <div class="exp-line-h"></div>
+                    </div>
+                    <div class="exp-card">
+                        <h3 class="exp-company">Meridian FinTech</h3>
+                        <p class="exp-scope">Virtual EOS Support &amp; Remote Operations Management</p>
+                        <div class="exp-divider"></div>
+                        <ul class="exp-duties">
+                            <li>Supported remote EOS cadence including virtual quarterly planning sessions and digital annual off-sites.</li>
+                            <li>Managed and updated KPIs into standardized cloud dashboards for real-time leadership visibility.</li>
+                            <li>Aligned organizational policies and managed virtual logistics for global leadership events.</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Role 3 -->
+                <div class="exp-entry">
+                    <div class="exp-meta">
+                        <span class="exp-date">2016 — 2018</span>
+                        <div class="exp-line-h"></div>
+                    </div>
+                    <div class="exp-card">
+                        <h3 class="exp-company">Harrington Property Group</h3>
+                        <p class="exp-scope">Virtual Operations &amp; Cloud Systems Administration</p>
+                        <div class="exp-divider"></div>
+                        <ul class="exp-duties">
+                            <li>Oversaw remote PandaDoc workflows, digital HR compliance, and essential cloud IT administration.</li>
+                            <li>Managed complex organizational cloud file systems and digital KPI reporting.</li>
+                            <li>Tracked risk and compliance renewals across virtual portfolios.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT / CTA -->
+    <section id="contact" class="section-padding bg-darker" style="text-align:center">
+        <div class="container sr">
+            <span class="section-label">Membership</span>
+            <h2 style="font-family:var(--serif);font-size:clamp(2.5rem,6vw,4.5rem);margin-bottom:40px">Elevate Your
+                <span class="heading-serif">Daily Operations</span></h2>
+            <p style="max-width:700px;margin:0 auto 50px;color:var(--muted);font-size:18px">I am currently exploring
+                opportunities to support high-impact leaders. If you require a new standard of support, let us discuss
+                how I can serve your vision.</p>
+            <a href="mailto:reiman.par@gmail.com" class="btn-solid" style="padding:20px 60px">Enquire Now</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid sr">
+                <div class="footer-col">
+                    <a href="#" class="footer-logo">Raymond</a>
+                    <p style="color:var(--muted);max-width:250px">Excellence in executive support and lifestyle
+                        management for the discerning professional.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Navigation</h4>
+                    <div class="footer-links">
+                        <a href="#about" class="footer-link">About</a>
+                        <a href="#expertise" class="footer-link">Expertise</a>
+                        <a href="#experience" class="footer-link">Track Record</a>
+                        <a href="#testimonials" class="footer-link">Praise</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">LinkedIn</a>
+                        <a href="mailto:reiman.par@gmail.com" class="footer-link">Email</a>
+                        <a href="#" class="footer-link">Discovery Call</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Location</h4>
+                    <p style="color:var(--muted)">Metro Manila<br>Philippines</p>
+                </div>
+            </div>
+            <div
+                style="padding-top:40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;color:var(--muted);font-size:12px">
+                <p>&copy; 2026 Raymond. All Rights Reserved.</p>
+                <p>Attention to detail matters.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll reveal
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('v'); obs.unobserve(e.target); } });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.sr').forEach(el => obs.observe(el));
+
+        // Nav effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('main-nav');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+
+            const h = document.documentElement.scrollHeight - window.innerHeight;
+            document.getElementById('scroll-bar').style.width = (window.scrollY / h * 100) + '%';
+        });
+
+        // Daily Cadence Checklist Animation
+        const checklistItems = document.querySelectorAll('.checklist-item');
+        function cycleChecklist() {
+            checklistItems.forEach(item => item.classList.remove('active'));
+            checklistItems.forEach((item, i) => {
+                setTimeout(() => {
+                    item.classList.add('active');
+                }, i * 1500);
+            });
+            setTimeout(cycleChecklist, (checklistItems.length * 1500) + 3000);
+        }
+
+        const pulseObs = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) {
+                cycleChecklist();
+                pulseObs.unobserve(entries[0].target);
+            }
+        }, { threshold: 0.3 });
+
+        // Mobile Menu Toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu on link click
+        document.querySelectorAll('.nl, .btn-outline').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // D3 Global Delegation Graph
+        function initDelegationGraph() {
+            const container = document.getElementById('delegation-graph');
+            if (!container) return;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            const data = {
+                nodes: [
+                    { id: "Raymond", group: 1, radius: 24, label: "Raymond" },
+                    { id: "Exec", group: 2, radius: 10, label: "Exec Team" },
+                    { id: "Ops", group: 2, radius: 10, label: "Operations" },
+                    { id: "Ext", group: 2, radius: 10, label: "External" },
+                    { id: "Personal", group: 2, radius: 10, label: "Personal" },
+                    { id: "CEO", group: 3, radius: 5, label: "CEO" },
+                    { id: "Board", group: 3, radius: 5, label: "Board" },
+                    { id: "Investors", group: 3, radius: 5, label: "Investors" },
+                    { id: "Finance", group: 3, radius: 5, label: "Finance" },
+                    { id: "HR", group: 3, radius: 5, label: "HR" },
+                    { id: "Legal", group: 3, radius: 5, label: "Legal" },
+                    { id: "Vendors", group: 3, radius: 5, label: "Vendors" },
+                    { id: "PR", group: 3, radius: 5, label: "PR" },
+                    { id: "Family", group: 3, radius: 5, label: "Family" },
+                    { id: "Estate", group: 3, radius: 5, label: "Estate" }
+                ],
+                links: [
+                    { source: "Raymond", target: "Exec" },
+                    { source: "Raymond", target: "Ops" },
+                    { source: "Raymond", target: "Ext" },
+                    { source: "Raymond", target: "Personal" },
+                    { source: "Exec", target: "CEO" },
+                    { source: "Exec", target: "Board" },
+                    { source: "Exec", target: "Investors" },
+                    { source: "Ops", target: "Finance" },
+                    { source: "Ops", target: "HR" },
+                    { source: "Ops", target: "Legal" },
+                    { source: "Ext", target: "Vendors" },
+                    { source: "Ext", target: "PR" },
+                    { source: "Personal", target: "Family" },
+                    { source: "Personal", target: "Estate" },
+                    { source: "Raymond", target: "CEO" },
+                    { source: "Finance", target: "Vendors" },
+                    { source: "Legal", target: "Board" }
+                ]
+            };
+
+            const svg = d3.select("#delegation-graph")
+                .append("svg")
+                .attr("width", "100%")
+                .attr("height", height)
+                .style("cursor", "grab");
+
+            const simulation = d3.forceSimulation(data.nodes)
+                .force("link", d3.forceLink(data.links).id(d => d.id).distance(100))
+                .force("charge", d3.forceManyBody().strength(-400))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collision", d3.forceCollide().radius(d => d.radius + 15));
+
+            const link = svg.append("g")
+                .selectAll("line")
+                .data(data.links)
+                .join("line")
+                .attr("stroke", "#C5A059")
+                .attr("stroke-opacity", 0.2)
+                .attr("stroke-width", 1);
+
+            const node = svg.append("g")
+                .selectAll("g")
+                .data(data.nodes)
+                .join("g")
+                .style("cursor", "pointer")
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+
+            node.append("circle")
+                .attr("r", d => d.radius)
+                .attr("fill", d => d.group === 1 ? "#C5A059" : "#1a1a1a")
+                .attr("stroke", "#C5A059")
+                .attr("stroke-width", 1)
+                .style("filter", d => d.group === 1 ? "drop-shadow(0 0 8px rgba(197,160,89,0.5))" : "none")
+                .style("transition", "fill 0.3s, stroke-width 0.3s");
+
+            node.append("text")
+                .text(d => d.group < 3 ? d.label : "") // Only show labels for major nodes initially
+                .attr("text-anchor", "middle")
+                .attr("dy", d => d.group === 1 ? ".35em" : "1.8em")
+                .attr("fill", "#fff")
+                .style("font-size", d => d.group === 1 ? "14px" : "8px")
+                .style("font-family", "Inter, sans-serif")
+                .style("letter-spacing", ".1em")
+                .style("text-transform", "uppercase")
+                .style("pointer-events", "none")
+                .style("opacity", 0.7);
+
+            // Interaction effects
+            node.on("mouseenter", function(event, d) {
+                d3.select(this).select("circle")
+                    .attr("fill", "#C5A059")
+                    .attr("stroke-width", 2);
+                
+                // Show label if it was hidden
+                if (d.group === 3) {
+                    d3.select(this).append("text")
+                        .attr("class", "temp-label")
+                        .text(d.id)
+                        .attr("text-anchor", "middle")
+                        .attr("dy", "1.8em")
+                        .attr("fill", "#C5A059")
+                        .style("font-size", "10px")
+                        .style("font-family", "Inter, sans-serif")
+                        .style("text-transform", "uppercase");
+                }
+
+                // Highlight connections
+                link.style("stroke-opacity", l => (l.source.id === d.id || l.target.id === d.id) ? 0.8 : 0.1)
+                    .style("stroke-width", l => (l.source.id === d.id || l.target.id === d.id) ? 2 : 1);
+            })
+            .on("mouseleave", function(event, d) {
+                d3.select(this).select("circle")
+                    .attr("fill", d.group === 1 ? "#C5A059" : "#1a1a1a")
+                    .attr("stroke-width", 1);
+                
+                d3.select(this).selectAll(".temp-label").remove();
+
+                link.style("stroke-opacity", 0.2)
+                    .style("stroke-width", 1);
+            });
+
+            function dragstarted(event) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                event.subject.fx = event.subject.x;
+                event.subject.fy = event.subject.y;
+                svg.style("cursor", "grabbing");
+            }
+
+            function dragged(event) {
+                event.subject.fx = event.x;
+                event.subject.fy = event.y;
+            }
+
+            function dragended(event) {
+                if (!event.active) simulation.alphaTarget(0);
+                event.subject.fx = null;
+                event.subject.fy = null;
+                svg.style("cursor", "grab");
+            }
+
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node
+                    .attr("transform", d => `translate(${d.x},${d.y})`);
+            });
+        }
+
+        const pulseSection = document.querySelector('.elegant-checklist-container');
+        if (pulseSection) pulseObs.observe(pulseSection);
+        
+        // Resize observer for D3
+        const resizeObs = new ResizeObserver(() => {
+            d3.select("#delegation-graph svg").remove();
+            initDelegationGraph();
+        });
+        if(document.getElementById('delegation-graph')) resizeObs.observe(document.getElementById('delegation-graph'));
+        
+        // Initial call
+        initDelegationGraph();
+
+        // === INBOX ANIMATION ===
+        function initInboxAnimation() {
+            const emails = document.querySelectorAll('.inbox-email');
+            const countBadge = document.getElementById('inbox-count');
+            const banner = document.getElementById('inbox-zero-banner');
+            const list = document.getElementById('inbox-list');
+            if (!emails.length) return;
+            let remaining = emails.length;
+
+            function answerEmail(index) {
+                if (index >= emails.length) {
+                    setTimeout(() => {
+                        list.style.display = 'none';
+                        banner.style.display = 'block';
+                        countBadge.textContent = '0';
+                        countBadge.style.background = '#59C57A';
+                        // Reset after pause
+                        setTimeout(() => {
+                            list.style.display = '';
+                            banner.style.display = 'none';
+                            countBadge.style.background = '';
+                            emails.forEach(e => { e.classList.remove('answered'); e.dataset.status = 'unread'; });
+                            remaining = emails.length;
+                            countBadge.textContent = remaining;
+                            emails.forEach(e => { e.querySelector('.inbox-email-status span').textContent = 'mark_email_unread'; });
+                            setTimeout(() => answerEmail(0), 2000);
+                        }, 4000);
+                    }, 800);
+                    return;
+                }
+                const el = emails[index];
+                el.classList.add('answered');
+                el.dataset.status = 'read';
+                el.querySelector('.inbox-email-status span').textContent = 'done';
+                remaining--;
+                countBadge.textContent = remaining;
+                setTimeout(() => answerEmail(index + 1), 1200);
+            }
+
+            // Start on scroll into view
+            const inboxObs = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) {
+                    setTimeout(() => answerEmail(0), 1000);
+                    inboxObs.unobserve(entries[0].target);
+                }
+            }, { threshold: 0.3 });
+            inboxObs.observe(document.getElementById('inbox-demo'));
+        }
+        initInboxAnimation();
+
+        // === APPLICATIONS DEMO ===
+        function initAppsDemo() {
+            // Tab switching
+            const tabs = document.querySelectorAll('.app-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => { t.classList.remove('active'); t.style.borderBottomColor = 'transparent'; });
+                    tab.classList.add('active');
+                    document.querySelectorAll('.app-panel').forEach(p => p.style.display = 'none');
+                    const target = document.getElementById('app-' + tab.dataset.app);
+                    if (target) target.style.display = '';
+                    if (tab.dataset.app === 'slides') animateSlides();
+                    if (tab.dataset.app === 'excel') animateExcel();
+                });
+            });
+
+            // Slides animation
+            function animateSlides() {
+                const title = document.getElementById('slide-title');
+                const subtitle = document.getElementById('slide-subtitle');
+                const divider = document.getElementById('slide-divider');
+                const bullets = document.getElementById('slide-bullets');
+                const cursor = document.getElementById('slide-cursor');
+                if (!title) return;
+                // Reset
+                [title, subtitle, bullets].forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; });
+                divider.style.width = '0';
+                cursor.style.opacity = '0';
+                // Animate cursor appearing
+                setTimeout(() => { cursor.style.opacity = '1'; cursor.style.left = '50%'; cursor.style.top = '40%'; }, 400);
+                // Type title
+                setTimeout(() => { title.style.opacity = '1'; title.style.transform = 'translateY(0)'; cursor.style.top = '48%'; }, 800);
+                // Type subtitle
+                setTimeout(() => { subtitle.style.opacity = '1'; subtitle.style.transform = 'translateY(0)'; cursor.style.left = '60%'; }, 1400);
+                // Draw divider
+                setTimeout(() => { divider.style.width = '120px'; cursor.style.top = '55%'; cursor.style.left = '40%'; }, 2000);
+                // Bullets
+                setTimeout(() => { bullets.style.opacity = '1'; bullets.style.transform = 'translateY(0)'; cursor.style.top = '70%'; }, 2600);
+                // Cursor fades
+                setTimeout(() => { cursor.style.opacity = '0'; }, 3200);
+            }
+
+            // Excel animation
+            function animateExcel() {
+                const body = document.getElementById('excel-body');
+                const formulaBar = document.getElementById('excel-formula-bar');
+                if (!body) return;
+                body.innerHTML = '';
+                formulaBar.textContent = '';
+                const rows = [
+                    ['1', 'Department', 'Q1 Budget', 'Q2 Budget', 'Variance'],
+                    ['2', 'Operations', '$245,000', '$268,500', ''],
+                    ['3', 'Marketing', '$180,000', '$192,000', ''],
+                    ['4', 'Legal & HR', '$95,000', '$102,400', ''],
+                    ['5', 'Executive', '$310,000', '$310,000', ''],
+                    ['6', '', '', 'Total:', ''],
+                ];
+                let delay = 0;
+                rows.forEach((row, ri) => {
+                    const tr = document.createElement('tr');
+                    if (ri === 0) tr.style.fontWeight = '600';
+                    row.forEach((cell, ci) => {
+                        const td = document.createElement('td');
+                        td.style.color = ci === 0 ? 'var(--muted)' : (ri === 0 ? 'var(--text)' : 'var(--muted)');
+                        td.style.fontSize = ci === 0 ? '11px' : '13px';
+                        td.id = `cell-${ri}-${ci}`;
+                        tr.appendChild(td);
+                        if (cell) {
+                            setTimeout(() => { td.textContent = cell; }, delay);
+                            delay += 120;
+                        }
+                    });
+                    body.appendChild(tr);
+                });
+                // After data fills, simulate formula
+                const formulaDelay = delay + 500;
+                setTimeout(() => {
+                    const targetCell = document.getElementById('cell-1-4');
+                    if (targetCell) { targetCell.classList.add('active-cell'); }
+                    formulaBar.textContent = '=C2-B2';
+                }, formulaDelay);
+                setTimeout(() => {
+                    const c = document.getElementById('cell-1-4');
+                    if (c) { c.textContent = '+$23,500'; c.style.color = '#59C57A'; }
+                }, formulaDelay + 800);
+                // Fill remaining variances
+                const variances = ['+$12,000', '+$7,400', '$0'];
+                variances.forEach((v, i) => {
+                    setTimeout(() => {
+                        const c = document.getElementById(`cell-${i+2}-4`);
+                        if (c) { c.textContent = v; c.style.color = v === '$0' ? 'var(--muted)' : '#59C57A'; c.classList.add('active-cell'); }
+                    }, formulaDelay + 1200 + (i * 400));
+                });
+                // Total row
+                setTimeout(() => {
+                    const t = document.getElementById('cell-5-4');
+                    if (t) { t.textContent = '+$42,900'; t.style.color = '#C5A059'; t.style.fontWeight = '700'; t.classList.add('active-cell'); }
+                    formulaBar.textContent = '=SUM(D2:D5)';
+                }, formulaDelay + 2800);
+            }
+
+            // HubSpot CRM animation
+            function animateHubspot() {
+                const deals = [
+                    { name: 'Meridian Group', value: '$1.2M', contact: 'J. Harrington' },
+                    { name: 'Nova Ventures', value: '$850K', contact: 'S. Mitchell' },
+                    { name: 'Atlas Holdings', value: '$2.1M', contact: 'K. Wu' },
+                    { name: 'Pinnacle Corp', value: '$640K', contact: 'A. Wells' },
+                ];
+                const stages = ['lead', 'qualified', 'proposal', 'closed'];
+                // Clear all columns
+                document.querySelectorAll('.hs-cards').forEach(c => c.innerHTML = '');
+                document.querySelectorAll('.hs-col-count').forEach(c => c.textContent = '0');
+
+                function createCard(deal) {
+                    const card = document.createElement('div');
+                    card.style.cssText = 'background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:8px; opacity:0; transform:translateY(10px); transition:all 0.4s ease;';
+                    card.innerHTML = `<div style="font-size:13px; font-weight:600; margin-bottom:4px;">${deal.name}</div><div style="font-size:11px; color:var(--accent); margin-bottom:4px;">${deal.value}</div><div style="font-size:11px; color:var(--muted);">${deal.contact}</div>`;
+                    return card;
+                }
+
+                let delay = 0;
+                deals.forEach((deal, di) => {
+                    // Add to Lead In
+                    setTimeout(() => {
+                        const col = document.querySelector('.hs-col[data-stage="lead"] .hs-cards');
+                        const card = createCard(deal);
+                        col.appendChild(card);
+                        requestAnimationFrame(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; });
+                        document.querySelector('.hs-col[data-stage="lead"] .hs-col-count').textContent = col.children.length;
+                    }, delay);
+                    delay += 600;
+
+                    // Move through stages
+                    stages.slice(1).forEach((stage, si) => {
+                        setTimeout(() => {
+                            const fromStage = stages[si];
+                            const fromCol = document.querySelector(`.hs-col[data-stage="${fromStage}"] .hs-cards`);
+                            const toCol = document.querySelector(`.hs-col[data-stage="${stage}"] .hs-cards`);
+                            if (fromCol.children[0]) {
+                                const card = fromCol.children[0];
+                                card.style.opacity = '0'; card.style.transform = 'translateX(20px)';
+                                setTimeout(() => {
+                                    fromCol.removeChild(card);
+                                    document.querySelector(`.hs-col[data-stage="${fromStage}"] .hs-col-count`).textContent = fromCol.children.length;
+                                    card.style.transform = 'translateX(-20px)';
+                                    toCol.appendChild(card);
+                                    requestAnimationFrame(() => { card.style.opacity = '1'; card.style.transform = 'translateX(0)'; });
+                                    document.querySelector(`.hs-col[data-stage="${stage}"] .hs-col-count`).textContent = toCol.children.length;
+                                    if (stage === 'closed') { card.style.borderColor = '#59C57A'; }
+                                }, 350);
+                            }
+                        }, delay);
+                        delay += 800;
+                    });
+                });
+            }
+
+            // Auto-tab cycling
+            const appOrder = ['slides', 'excel', 'hubspot'];
+            const animFns = { slides: animateSlides, excel: animateExcel, hubspot: animateHubspot };
+            const durations = { slides: 5000, excel: 6000, hubspot: 9000 };
+            let currentAppIdx = 0;
+            let autoTabTimer = null;
+
+            function switchToApp(name) {
+                const tabs = document.querySelectorAll('.app-tab');
+                tabs.forEach(t => { t.classList.remove('active'); t.style.borderBottomColor = 'transparent'; });
+                const activeTab = document.querySelector(`.app-tab[data-app="${name}"]`);
+                if (activeTab) activeTab.classList.add('active');
+                document.querySelectorAll('.app-panel').forEach(p => p.style.display = 'none');
+                const panel = document.getElementById('app-' + name);
+                if (panel) panel.style.display = '';
+                if (animFns[name]) animFns[name]();
+            }
+
+            function startAutoCycle() {
+                if (autoTabTimer) clearTimeout(autoTabTimer);
+                const current = appOrder[currentAppIdx];
+                switchToApp(current);
+                autoTabTimer = setTimeout(() => {
+                    currentAppIdx = (currentAppIdx + 1) % appOrder.length;
+                    startAutoCycle();
+                }, durations[current]);
+            }
+
+            // Manual tab click resets auto-cycle
+            document.querySelectorAll('.app-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const name = tab.dataset.app;
+                    currentAppIdx = appOrder.indexOf(name);
+                    switchToApp(name);
+                    if (autoTabTimer) clearTimeout(autoTabTimer);
+                    autoTabTimer = setTimeout(() => {
+                        currentAppIdx = (currentAppIdx + 1) % appOrder.length;
+                        startAutoCycle();
+                    }, durations[name]);
+                });
+            });
+
+            // Auto-start on scroll
+            const appsObs = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) {
+                    startAutoCycle();
+                    appsObs.unobserve(entries[0].target);
+                }
+            }, { threshold: 0.3 });
+            const appsDemoEl = document.getElementById('apps-demo');
+            if (appsDemoEl) appsObs.observe(appsDemoEl);
+        }
+        initAppsDemo();
+    </script>
+</body>
+
+</html>
