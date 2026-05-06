@@ -547,9 +547,9 @@
             checklistItems.forEach((item, i) => {
                 setTimeout(() => {
                     item.classList.add('active');
-                }, i * 1500);
+                }, i * 1000);
             });
-            setTimeout(cycleChecklist, (checklistItems.length * 1500) + 3000);
+            setTimeout(cycleChecklist, (checklistItems.length * 1000) + 2000);
         }
 
         const pulseObs = new IntersectionObserver(entries => {
@@ -774,9 +774,9 @@
                             remaining = emails.length;
                             countBadge.textContent = remaining;
                             emails.forEach(e => { e.querySelector('.inbox-email-status span').textContent = 'mark_email_unread'; });
-                            setTimeout(() => answerEmail(0), 2000);
-                        }, 4000);
-                    }, 800);
+                            setTimeout(() => answerEmail(0), 1200);
+                        }, 2500);
+                    }, 500);
                     return;
                 }
                 const el = emails[index];
@@ -785,7 +785,7 @@
                 el.querySelector('.inbox-email-status span').textContent = 'done';
                 remaining--;
                 countBadge.textContent = remaining;
-                setTimeout(() => answerEmail(index + 1), 1200);
+                setTimeout(() => answerEmail(index + 1), 700);
             }
 
             // Start on scroll into view
@@ -828,17 +828,17 @@
                 divider.style.width = '0';
                 cursor.style.opacity = '0';
                 // Animate cursor appearing
-                setTimeout(() => { cursor.style.opacity = '1'; cursor.style.left = '50%'; cursor.style.top = '40%'; }, 400);
+                setTimeout(() => { cursor.style.opacity = '1'; cursor.style.left = '50%'; cursor.style.top = '40%'; }, 200);
                 // Type title
-                setTimeout(() => { title.style.opacity = '1'; title.style.transform = 'translateY(0)'; cursor.style.top = '48%'; }, 800);
+                setTimeout(() => { title.style.opacity = '1'; title.style.transform = 'translateY(0)'; cursor.style.top = '48%'; }, 400);
                 // Type subtitle
-                setTimeout(() => { subtitle.style.opacity = '1'; subtitle.style.transform = 'translateY(0)'; cursor.style.left = '60%'; }, 1400);
+                setTimeout(() => { subtitle.style.opacity = '1'; subtitle.style.transform = 'translateY(0)'; cursor.style.left = '60%'; }, 700);
                 // Draw divider
-                setTimeout(() => { divider.style.width = '120px'; cursor.style.top = '55%'; cursor.style.left = '40%'; }, 2000);
+                setTimeout(() => { divider.style.width = '120px'; cursor.style.top = '55%'; cursor.style.left = '40%'; }, 1000);
                 // Bullets
-                setTimeout(() => { bullets.style.opacity = '1'; bullets.style.transform = 'translateY(0)'; cursor.style.top = '70%'; }, 2600);
+                setTimeout(() => { bullets.style.opacity = '1'; bullets.style.transform = 'translateY(0)'; cursor.style.top = '70%'; }, 1300);
                 // Cursor fades
-                setTimeout(() => { cursor.style.opacity = '0'; }, 3200);
+                setTimeout(() => { cursor.style.opacity = '0'; }, 1600);
             }
 
             // Excel animation
@@ -868,13 +868,13 @@
                         tr.appendChild(td);
                         if (cell) {
                             setTimeout(() => { td.textContent = cell; }, delay);
-                            delay += 120;
+                            delay += 70;
                         }
                     });
                     body.appendChild(tr);
                 });
                 // After data fills, simulate formula
-                const formulaDelay = delay + 500;
+                const formulaDelay = delay + 300;
                 setTimeout(() => {
                     const targetCell = document.getElementById('cell-1-4');
                     if (targetCell) { targetCell.classList.add('active-cell'); }
@@ -883,21 +883,21 @@
                 setTimeout(() => {
                     const c = document.getElementById('cell-1-4');
                     if (c) { c.textContent = '+$23,500'; c.style.color = '#59C57A'; }
-                }, formulaDelay + 800);
+                }, formulaDelay + 500);
                 // Fill remaining variances
                 const variances = ['+$12,000', '+$7,400', '$0'];
                 variances.forEach((v, i) => {
                     setTimeout(() => {
                         const c = document.getElementById(`cell-${i+2}-4`);
                         if (c) { c.textContent = v; c.style.color = v === '$0' ? 'var(--muted)' : '#59C57A'; c.classList.add('active-cell'); }
-                    }, formulaDelay + 1200 + (i * 400));
+                    }, formulaDelay + 800 + (i * 250));
                 });
                 // Total row
                 setTimeout(() => {
                     const t = document.getElementById('cell-5-4');
                     if (t) { t.textContent = '+$42,900'; t.style.color = '#C5A059'; t.style.fontWeight = '700'; t.classList.add('active-cell'); }
                     formulaBar.textContent = '=SUM(D2:D5)';
-                }, formulaDelay + 2800);
+                }, formulaDelay + 1800);
             }
 
             // HubSpot CRM animation
@@ -930,7 +930,7 @@
                         requestAnimationFrame(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; });
                         document.querySelector('.hs-col[data-stage="lead"] .hs-col-count').textContent = col.children.length;
                     }, delay);
-                    delay += 600;
+                    delay += 400;
 
                     // Move through stages
                     stages.slice(1).forEach((stage, si) => {
@@ -949,10 +949,10 @@
                                     requestAnimationFrame(() => { card.style.opacity = '1'; card.style.transform = 'translateX(0)'; });
                                     document.querySelector(`.hs-col[data-stage="${stage}"] .hs-col-count`).textContent = toCol.children.length;
                                     if (stage === 'closed') { card.style.borderColor = '#59C57A'; }
-                                }, 350);
+                                }, 250);
                             }
                         }, delay);
-                        delay += 800;
+                        delay += 550;
                     });
                 });
             }
@@ -960,7 +960,7 @@
             // Auto-tab cycling
             const appOrder = ['slides', 'excel', 'hubspot'];
             const animFns = { slides: animateSlides, excel: animateExcel, hubspot: animateHubspot };
-            const durations = { slides: 5000, excel: 6000, hubspot: 9000 };
+            const durations = { slides: 3500, excel: 4500, hubspot: 7000 };
             let currentAppIdx = 0;
             let autoTabTimer = null;
 

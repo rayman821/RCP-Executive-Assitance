@@ -19,7 +19,7 @@ img{display:block;max-width:100%;height:auto}
 a{text-decoration:none;color:inherit}
 
 /* Scroll reveal */
-.sr{opacity:0;transform:translateY(30px);transition:opacity 1.2s ease,transform 1.2s ease}
+.sr{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease}
 .sr.v{opacity:1;transform:translateY(0)}
 
 /* Utilities */
@@ -334,7 +334,7 @@ a{text-decoration:none;color:inherit}
     background: var(--accent);
     top: var(--t);
     opacity: 0;
-    animation: flyIn 2.5s infinite linear;
+    animation: flyIn 1.5s infinite linear;
     animation-delay: var(--d);
 }
 @keyframes flyIn {
@@ -364,7 +364,7 @@ a{text-decoration:none;color:inherit}
     padding: 7px 10px;
     border: 1px solid var(--border);
     border-radius: 2px;
-    animation: clearRow 5s infinite;
+    animation: clearRow 3.5s infinite;
     animation-delay: var(--d);
     opacity: 0;
 }
@@ -400,7 +400,7 @@ a{text-decoration:none;color:inherit}
     justify-content: center;
     gap: 10px;
     opacity: 0;
-    animation: inboxZero 5s infinite;
+    animation: inboxZero 3.5s infinite;
 }
 .inbox-status p {
     font-size: 12px;
