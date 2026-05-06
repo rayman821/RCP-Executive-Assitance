@@ -547,9 +547,9 @@
             checklistItems.forEach((item, i) => {
                 setTimeout(() => {
                     item.classList.add('active');
-                }, i * 1000);
+                }, i * 500);
             });
-            setTimeout(cycleChecklist, (checklistItems.length * 1000) + 2000);
+            setTimeout(cycleChecklist, (checklistItems.length * 500) + 1500);
         }
 
         const pulseObs = new IntersectionObserver(entries => {
@@ -774,9 +774,9 @@
                             remaining = emails.length;
                             countBadge.textContent = remaining;
                             emails.forEach(e => { e.querySelector('.inbox-email-status span').textContent = 'mark_email_unread'; });
-                            setTimeout(() => answerEmail(0), 1200);
-                        }, 2500);
-                    }, 500);
+                            setTimeout(() => answerEmail(0), 1000);
+                        }, 1500);
+                    }, 400);
                     return;
                 }
                 const el = emails[index];
@@ -785,7 +785,7 @@
                 el.querySelector('.inbox-email-status span').textContent = 'done';
                 remaining--;
                 countBadge.textContent = remaining;
-                setTimeout(() => answerEmail(index + 1), 700);
+                setTimeout(() => answerEmail(index + 1), 400);
             }
 
             // Start on scroll into view
